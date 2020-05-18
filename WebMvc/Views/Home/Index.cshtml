@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+@section styles{
+
+    <link href="~/Scripts/toastr/toastr.css" rel="stylesheet" />
+
+}
+
+<h2>Index</h2>
+
+<div class="container">
+
+    <div class="form-group">
+        First Name:
+        <input id="txtFirstName" type="text" name="firstName" value="" class="form-control" />
+    </div>
+    <div class="form-group">
+        First Name:
+        <input id="txtLastName" type="text" name="lastName" value="" class="form-control" />
+    </div>
+    <div class="form-group">
+        Address:
+        <input id="txtAddress" type="text" name="address" value="" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input id="btnSaveContact" type="button" name="SaveContact" value="Save Contact" class="btn btn-primary active" />
+    </div>
+
+</div>
+
+@section scripts{
+
+    <script src="~/Scripts/toastr/toastr.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $("#btnSaveContact").click(function () {
+                SaveContact();
+            });
+        });
+
+        function SaveContact() {
+            var firstName = $("#txtFirstName").val();
+            var lastName = $("#txtLastName").val();
+            var address = $("#txtAddress").val();
+
+            var objContactViewModel = { FirstName: firstName, LastName: lastName, Address: address };
+
+            $.ajax({
+                async: true,
+                type: 'POST',
+                dataType: 'JSON',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(objContactViewModel),
+                url: 'Home/Index',
+                success: function (response) {
+                    if (response.success == true) {
+                        toastr.success(response.message, 'Success Alert', { timeOut: 3000 });
+                    } else {
+                        toastr.info(response.message, 'Information Alert', { timeOut: 3000 });
+                    }
+                },
+                error: function () {
+                    toastr.error('There is some problem process your request', 'Error Alert', new { timeOut: 3000 });
+                }
+            });
+        }
+
+    </script>
+
+}
+
+
+
